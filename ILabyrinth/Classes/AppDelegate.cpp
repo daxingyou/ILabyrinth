@@ -18,11 +18,13 @@ AppDelegate::~AppDelegate()
 
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
-    auto director = Director::getInstance();
-    auto eglView = EGLView::getInstance();
-    
+   	auto director = Director::getInstance(); 
+	auto glview = director->getOpenGLView(); 
 
-    director->setOpenGLView(eglView);
+	if(!glview) {
+		glview = GLViewImpl::create("title");
+		director->setOpenGLView(glview);
+	}
 	
     // turn on display FPS
     director->setDisplayStats(true);
@@ -35,7 +37,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto pFileUtils = FileUtils::getInstance();
     std::vector<std::string> searchPaths;
     
-    auto screenSize = eglView->getFrameSize();
+    auto screenSize = glview->getFrameSize();
     
     if (screenSize.width > 320)
     {
@@ -54,7 +56,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sprites.plist");
 
-    eglView->setDesignResolutionSize(480.0, 320.0, ResolutionPolicy::SHOW_ALL);
+    glview->setDesignResolutionSize(480.0, 320.0, ResolutionPolicy::SHOW_ALL);
     
     if(UserDefault::getInstance()->getIntegerForKey("level"))
     {
